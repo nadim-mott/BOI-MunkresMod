@@ -1,8 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-	<name>munkres1</name>
-	<directory>BOI-MunkresMod</directory>
-	<description/>
-	<version>1.0</version>
-	<visibility/>
+    <name>Munkres Analysis on Manifolds Mod</name>
+    <directory>boi-munkresmod</directory>
+    <id>3264879661</id>
+    <description></description>
+    <version>1.1</version>
+    <visibility>Friends Only</visibility>
+    <tag id="Lua"/>
+    <tag id="Items"/>
+    <tag id="Active Items"/>
 </metadata>
-
