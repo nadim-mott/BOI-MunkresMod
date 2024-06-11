@@ -94,7 +94,9 @@ function mod:updateFloor()
                     else
                         Isaac.ExecuteCommand( "reseed" )
                         level:SetStage ( stage - 1 , StageType.STAGETYPE_REPENTANCE )
-                    end
+                    end 
+
+                    
                     
                     
                 else
