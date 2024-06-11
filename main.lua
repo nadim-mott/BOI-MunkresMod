@@ -4,6 +4,8 @@ local munkresAnalysis = Isaac.GetItemIdByName("Munkres Analysis on Manifolds")
 local need_to_update_floor = false
 local used_r_key = false
 local completed_r_key_use = false
+local used_r_key_home = false
+local need_to_use_glowing = false
 
 
 if EID then
@@ -43,6 +45,11 @@ function mod:updateFloor()
         Isaac.ExecuteCommand( "reseed" )
 
     end
+    if need_to_use_glowing == true then
+        need_to_use_glowing = false
+        player:UseActiveItem(CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS, false, false, true, false, -1, 0)
+
+    end
     if need_to_update_floor == true then
         --Game():StartStageTransition(true, 1 , player)
         local level = game:GetLevel()
@@ -70,6 +77,8 @@ function mod:updateFloor()
             else
                 --Basement:
                 need_to_update_floor = false
+                player:UseActiveItem(CollectibleType.COLLECTIBLE_R_KEY, false, false, true, false, -1, 0)
+                used_r_key_home = true
 
             end
         elseif 2 <= stage and stage <= 9 then
@@ -79,7 +88,7 @@ function mod:updateFloor()
                 local randomStage = rng:RandomInt(1)
                 if randomStage == 0  or stage == LevelStage.STAGE4_2 then
                     if stage == LevelStage.STAGE4_1 then
-                        player:UseActiveItem(CollectibleType.COLLECTIBLE_R_KEY)
+                        player:UseActiveItem(CollectibleType.COLLECTIBLE_R_KEY, false, false, true, false, -1, 0)
                         need_to_update_floor = false
                         used_r_key = true
                     else
@@ -90,7 +99,7 @@ function mod:updateFloor()
                     
                 else
                     if stage == LevelStage.STAGE4_1 then
-                        player:UseActiveItem(CollectibleType.COLLECTIBLE_R_KEY)
+                        player:UseActiveItem(CollectibleType.COLLECTIBLE_R_KEY, false, false, true, false, -1, 0)
                         need_to_update_floor = false 
                         used_r_key = true
                     else
@@ -169,6 +178,10 @@ function mod:depleteActive()
     if used_r_key == true then
         completed_r_key_use = true
         used_r_key = false
+    end
+    if used_r_key_home == true then
+        need_to_use_glowing = true
+        used_r_key_home = false
     end
 
 
