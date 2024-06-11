@@ -2,6 +2,8 @@ local mod = RegisterMod("Munkres Analysis Mod", 1)
 local game = Game()
 local munkresAnalysis = Isaac.GetItemIdByName("Munkres Analysis on Manifolds")
 local need_to_update_floor = false
+local used_r_key = false
+local completed_r_key_use = false
 
 
 if EID then
@@ -11,79 +13,18 @@ end
 
 
 function mod:MunkresUse(item)
-    
-    local level = game:GetLevel()
-    local stage = level:GetStage()
-    local stageType = level:GetStageType()
-
-    local player = Isaac.GetPlayer()
-    local rng = player:GetCollectibleRNG(munkresAnalysis)
-    need_to_update_floor = true
-    if stage == LevelStage.STAGE1_1 then
-        -- Basement / Downpour I:
-        if ( stageType == StageType.STAGETYPE_REPENTANCE or stageType == StageType.STAGETYPE_REPENTANCE_B) then
-            -- Downpour:
-            local randomStage = rng:RandomInt(2)
-            if randomStage == 0 then
-                level:SetStage ( LevelStage.STAGE1_1 , StageType.STAGETYPE_ORIGINAL )
-            elseif randomStage == 1 then
-                level:SetStage ( LevelStage.STAGE1_1 , StageType.STAGETYPE_WOTL )
-            else
-                level:SetStage ( LevelStage.STAGE1_1 , StageType.STAGETYPE_AFTERBIRTH )
-            end
-        else
-            --Basement:
-            need_to_update_floor = false
-
-        end
-    elseif 2 <= stage and stage <= 9 then
-        -- Base - ???
-        if ( stageType == StageType.STAGETYPE_REPENTANCE or stageType == StageType.STAGETYPE_REPENTANCE_B) then
-            -- Alternate path
-            local randomStage = rng:RandomInt(1)
-            if randomStage == 0  or stage == LevelStage.STAGE4_2 then
-                level:SetStage ( stage - 1 , StageType.STAGETYPE_REPENTANCE )
-            else
-                level:SetStage ( stage - 1 , StageType.STAGETYPE_REPENTANCE_B )
-            end
-
-        else
-            --Main path
-            local randomStage = rng:RandomInt(2)
-            if randomStage == 0 then
-                level:SetStage ( stage - 1 , StageType.STAGETYPE_ORIGINAL )
-            elseif randomStage == 1 then
-                level:SetStage ( stage - 1 , StageType.STAGETYPE_WOTL )
-            else
-                level:SetStage ( stage - 1 , StageType.STAGETYPE_AFTERBIRTH )
+    local playerCount = game:GetNumPlayers()
+    local player = Isaac.GetPlayer(playerIndex)
+    for playerIndex = 0, playerCount - 1 do
+        for slot = ActiveSlot.SLOT_PRIMARY, ActiveSlot.SLOT_POCKET2 do
+            if player:GetActiveItem(slot) == munkresAnalysis then
+                Isaac.GetPlayer():AddBrokenHearts(1)
             end
         end
-    elseif stage == LevelStage.STAGE5 then
-        --Main path
-        local randomStage = rng:RandomInt(2)
-        if randomStage == 0 then
-            level:SetStage ( LevelStage.STAGE4_2 , StageType.STAGETYPE_ORIGINAL )
-        elseif randomStage == 1 then
-            level:SetStage ( LevelStage.STAGE4_2 , StageType.STAGETYPE_WOTL )
-        else
-            level:SetStage ( LevelStage.STAGE4_2 , StageType.STAGETYPE_AFTERBIRTH )
-        end
 
-
-    elseif stage == LevelStage.STAGE7 then
-        level:SetStage ( LevelStage.STAGE4_3 , stageType )
-
-
-    elseif stage == LevelStage.STAGE8 then
-        need_to_update_floor = false
-    else 
-        level:SetStage ( stage - 1 , stageType )
     end
-
-
-
-
-    
+    need_to_update_floor = true
+       
     --Isaac.ExecuteCommand( "restart" )
     --game:StartStageTransition( true, 1, player )
     return {
@@ -95,9 +36,114 @@ end
 
 function mod:updateFloor()
     local player = Isaac.GetPlayer()    
+    if completed_r_key_use == true then
+        completed_r_key_use = false
+        local level = game:GetLevel()
+        level:SetStage ( LevelStage.STAGE3_2 , StageType.STAGETYPE_REPENTANCE )
+        Isaac.ExecuteCommand( "reseed" )
+
+    end
     if need_to_update_floor == true then
         --Game():StartStageTransition(true, 1 , player)
-        Isaac.ExecuteCommand( "reseed" )
+        local level = game:GetLevel()
+        local stage = level:GetStage()
+        local stageType = level:GetStageType()
+
+        local player = Isaac.GetPlayer()
+        local rng = player:GetCollectibleRNG(munkresAnalysis)
+        
+        if stage == LevelStage.STAGE1_1 then
+            -- Basement / Downpour I:
+            if ( stageType == StageType.STAGETYPE_REPENTANCE or stageType == StageType.STAGETYPE_REPENTANCE_B) then
+                -- Downpour:
+                local randomStage = rng:RandomInt(2)
+                if randomStage == 0 then
+                    Isaac.ExecuteCommand( "reseed" )
+                    level:SetStage ( LevelStage.STAGE1_1 , StageType.STAGETYPE_ORIGINAL )
+                elseif randomStage == 1 then
+                    Isaac.ExecuteCommand( "reseed" )
+                    level:SetStage ( LevelStage.STAGE1_1 , StageType.STAGETYPE_WOTL )
+                else
+                    Isaac.ExecuteCommand( "reseed" )
+                    level:SetStage ( LevelStage.STAGE1_1 , StageType.STAGETYPE_AFTERBIRTH )
+                end
+            else
+                --Basement:
+                need_to_update_floor = false
+
+            end
+        elseif 2 <= stage and stage <= 9 then
+            -- Base - ???
+            if ( stageType == StageType.STAGETYPE_REPENTANCE or stageType == StageType.STAGETYPE_REPENTANCE_B) then
+                -- Alternate path
+                local randomStage = rng:RandomInt(1)
+                if randomStage == 0  or stage == LevelStage.STAGE4_2 then
+                    if stage == LevelStage.STAGE4_1 then
+                        player:UseActiveItem(CollectibleType.COLLECTIBLE_R_KEY)
+                        need_to_update_floor = false
+                        used_r_key = true
+                    else
+                        Isaac.ExecuteCommand( "reseed" )
+                        level:SetStage ( stage - 1 , StageType.STAGETYPE_REPENTANCE )
+                    end
+                    
+                    
+                else
+                    if stage == LevelStage.STAGE4_1 then
+                        player:UseActiveItem(CollectibleType.COLLECTIBLE_R_KEY)
+                        need_to_update_floor = false 
+                        used_r_key = true
+                    else
+                        Isaac.ExecuteCommand( "reseed" )
+                        level:SetStage ( stage - 1 , StageType.STAGETYPE_REPENTANCE_B )
+                    end
+                    
+                end
+
+            else
+                --Main path
+                local randomStage = rng:RandomInt(2)
+                if randomStage == 0 then
+                    Isaac.ExecuteCommand( "reseed" )
+                    level:SetStage ( stage - 1 , StageType.STAGETYPE_ORIGINAL )
+                elseif randomStage == 1 then
+                    Isaac.ExecuteCommand( "reseed" )
+                    level:SetStage ( stage - 1 , StageType.STAGETYPE_WOTL )
+                else
+                    Isaac.ExecuteCommand( "reseed" )
+                    level:SetStage ( stage - 1 , StageType.STAGETYPE_AFTERBIRTH )
+                end
+            end
+        elseif stage == LevelStage.STAGE5 then
+            --Main path
+            local randomStage = rng:RandomInt(2)
+            if randomStage == 0 then
+                Isaac.ExecuteCommand( "reseed" )
+                level:SetStage ( LevelStage.STAGE4_2 , StageType.STAGETYPE_ORIGINAL )
+            elseif randomStage == 1 then
+                Isaac.ExecuteCommand( "reseed" )
+                level:SetStage ( LevelStage.STAGE4_2 , StageType.STAGETYPE_WOTL )
+            else
+                Isaac.ExecuteCommand( "reseed" )
+                level:SetStage ( LevelStage.STAGE4_2 , StageType.STAGETYPE_AFTERBIRTH )
+            end
+
+
+        elseif stage == LevelStage.STAGE7 then
+            Isaac.ExecuteCommand( "reseed" )
+            level:SetStage ( LevelStage.STAGE4_3 , stageType )
+
+
+        elseif stage == LevelStage.STAGE8 then
+            need_to_update_floor = false
+        else 
+            Isaac.ExecuteCommand( "reseed" )
+            level:SetStage ( stage - 1 , stageType )
+        end
+
+        if need_to_update_floor == true then
+            Isaac.ExecuteCommand( "reseed" )
+        end
         need_to_update_floor = false
     end
 end
@@ -119,6 +165,10 @@ function mod:depleteActive()
             end
         end
 
+    end
+    if used_r_key == true then
+        completed_r_key_use = true
+        used_r_key = false
     end
 
 
