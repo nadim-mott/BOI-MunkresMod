@@ -9,7 +9,7 @@ local need_to_use_glowing = false
 
 
 if EID then
-    EID:addCollectible(munkresAnalysis, "Upon use transports Isaac to the floor above and changes its layout#Depletes charge upon entering a new floor", "Munkres Analysis on Manifolds")
+    EID:addCollectible(munkresAnalysis, "Upon use transports Isaac to the floor above and changes its layout#Gives Isaac a broken heart for each use", "Munkres Analysis on Manifolds")
 end
 
 
@@ -162,7 +162,7 @@ end
 function mod:depleteActive()
     
     local playerCount = game:GetNumPlayers()
-    
+    --[[
     for playerIndex = 0, playerCount - 1 do
         local player = Isaac.GetPlayer(playerIndex)
         local blood_charges = player:GetBloodCharge()
@@ -177,6 +177,7 @@ function mod:depleteActive()
         end
 
     end
+    --]]
     if used_r_key == true then
         completed_r_key_use = true
         used_r_key = false

@@ -3,9 +3,16 @@
     <name>Munkres Analysis on Manifolds Mod</name>
     <directory>boi-munkresmod</directory>
     <id>3264879661</id>
-    <description></description>
-    <version>1.2</version>
-    <visibility>Friends Only</visibility>
+    <description>Adds the popular undergraduate math textbook &quot;Analysis on Manifolds&quot; by James R. Munkres to The Binding of Isaac. Dive into the elegant world of mathematical beauty with &quot;Analysis on Manifolds&quot; by James R. Munkres. This masterful mod transforms the complex realm of manifolds into an accessible and engaging journey, perfect for both seasoned mathematicians and eager students. Through Munkres' clear explanations and thoughtful examples, you'll explore the intricate structures that form the backbone of modern geometry and physics. Whether you're unraveling the mysteries of differentiable functions or delving into the depths of integration on manifolds, this book is your gateway to unlocking the secrets of the universe. Prepare to be captivated by the clarity, depth, and precision of Munkres' approach, and let your mathematical curiosity soar to new heights.
+
+Item Descriptions:
+- Upon use transports Isaac to the floor above and changes its layout
+- Gives Isaac a broken heart for each use
+
+Feel free to suggest any changes on github:
+https://github.com/nadim-mott/BOI-MunkresMod</description>
+    <version>1.3</version>
+    <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
     <tag id="Active Items"/>
