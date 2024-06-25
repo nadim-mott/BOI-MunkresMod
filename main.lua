@@ -6,7 +6,7 @@ local used_r_key = false
 local completed_r_key_use = false
 local used_r_key_home = false
 local need_to_use_glowing = false
-
+local need_update_player = nil
 
 if EID then
     EID:addCollectible(munkresAnalysis, "Upon use transports Isaac to the floor above and changes its layout#Gives Isaac a broken heart for each use", "Munkres Analysis on Manifolds")
@@ -14,17 +14,9 @@ end
 
 
 
-function mod:MunkresUse(item)
-    local playerCount = game:GetNumPlayers()
-    local player = Isaac.GetPlayer(playerIndex)
-    for playerIndex = 0, playerCount - 1 do
-        for slot = ActiveSlot.SLOT_PRIMARY, ActiveSlot.SLOT_POCKET2 do
-            if player:GetActiveItem(slot) == munkresAnalysis then
-                Isaac.GetPlayer():AddBrokenHearts(1)
-            end
-        end
-
-    end
+function mod:MunkresUse(itemID, itemRNG, player)
+    
+    need_update_player = player
     need_to_update_floor = true
        
     --Isaac.ExecuteCommand( "restart" )
@@ -51,6 +43,7 @@ function mod:updateFloor()
 
     end
     if need_to_update_floor == true then
+        need_update_player:AddBrokenHearts(1)
         --Game():StartStageTransition(true, 1 , player)
         local level = game:GetLevel()
         local stage = level:GetStage()
